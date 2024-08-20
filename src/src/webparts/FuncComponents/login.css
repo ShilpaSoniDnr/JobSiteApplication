@@ -1,0 +1,56 @@
+.content {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'Arial', sans-serif;
+}
+
+.login {
+    width: 32vw;
+    display: flex;
+    flex-direction: column;
+    gap: 8vh;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.2);
+    /* Transparent background */
+    -webkit-backdrop-filter: blur(10px);
+    /* Blurry effect */
+    backdrop-filter: blur(10px);
+    /* For Safari */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* Border to enhance the blurry effect */
+}
+
+.login input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.login input:focus {
+    border-color: #0078d7;
+    outline: none;
+}
+
+.login button {
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #0078d7;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login button:hover {
+    background-color: #005bb5;
+}

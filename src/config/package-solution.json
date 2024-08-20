@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "x-timesheet-client-side-solution",
+    "id": "6b6c09d5-4bc8-46bd-ab53-68b89252b3ee",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.18.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "xTimesheet description"
+      },
+      "longDescription": {
+        "default": "xTimesheet description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "x-timesheet Feature",
+        "description": "The feature that activates elements of the x-timesheet solution.",
+        "id": "d5a48a8f-cade-4abb-ab0d-5290ca1a5935",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/x-timesheet.sppkg"
+  }
+}
