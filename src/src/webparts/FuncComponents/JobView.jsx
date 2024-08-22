@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
@@ -11,6 +11,50 @@ function JobView() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const accessToken = localStorage.getItem('accessToken');
+  const userID = localStorage.getItem('userID');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/getJobData', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            //'Authorization': `Bearer ${token}`, // Pass the access token in headers
+          },
+          body: JSON.stringify({
+            Token: accessToken,
+            UserID: parseInt(userID, 10),
+            db_Obj: {
+              Id: 269,
+            },
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+          console.log('Table Data:', result);
+          
+        } else {
+          setError('Failed to fetch data');
+        }
+      } catch (error) {
+        setError('Error fetching data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [accessToken, userID]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
   return (
     <>
     <div className="container-fluid mt-3">

@@ -2,9 +2,5 @@
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/spfx-serve.schema.json",
   "port": 4321,
   "https": true,
-  "initialPage": "https://{tenantDomain}/_layouts/workbench.aspx",
-  "api": {
-    "port": 3000,
-    "entryPath": "server/ProxyServer.mjs"
-  }
+  "initialPage": "https://{tenantDomain}/_layouts/workbench.aspx"
 }

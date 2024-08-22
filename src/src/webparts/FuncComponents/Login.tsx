@@ -2,10 +2,14 @@ import * as React from 'react';
 import { useState } from 'react';
 import './login.css';
 import { encode } from './TokenEncryptor.mjs';
+import { useNavigate } from 'react-router-dom';
+
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -19,18 +23,33 @@ function Login() {
     console.log(user, pass);
 
     try {
-      const res = await fetch(`http://localhost:3000/proxy?user=${user}&pass=${pass}`, {
+      const res = await fetch(`http://localhost:3000/getToken?user=${user}&pass=${pass}`, {
         method: 'GET',
+
       });
+      console.log(res);
 
       if (res.ok) {
         const data = await res.json();
         console.log(data);
+        console.log(data.SecurityToken);
+        if (data.SecurityToken) { // Assuming a successful login if 'SecurityToken' is present
+          localStorage.setItem('accessToken', data.SecurityToken);
+          localStorage.setItem('userID', data.UserID);
+
+          // Navigate to the JobView page
+          navigate('/jobview');
+        } else {
+          console.error('Login failed: Invalid response data');
+          alert('Login failed: Invalid response data'); // Show the error message to the user
+        }
       } else {
-        console.error('Failed to fetch:', res.statusText);
+        console.error('Failed to login:', res.statusText);
+        alert('Failed to login: ' + res.statusText);
       }
     } catch (error) {
       console.error('Error:', error);
+      alert('An error occurred during login');
     }
   };
 
