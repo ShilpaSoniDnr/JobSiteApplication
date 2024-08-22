@@ -36,6 +36,7 @@ function Login() {
         if (data.SecurityToken) { // Assuming a successful login if 'SecurityToken' is present
           localStorage.setItem('accessToken', data.SecurityToken);
           localStorage.setItem('userID', data.UserID);
+          localStorage.setItem('username', data.UserName);
 
           // Navigate to the JobView page
           navigate('/jobview');

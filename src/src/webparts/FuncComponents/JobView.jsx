@@ -6,16 +6,19 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './JobView.css';
 import { Button } from 'react-bootstrap'
 import FormModel from './FormModel';
+import { Encrypt } from './TokenEncryptor.mjs';
 
 function JobView() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([{}]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const accessToken = localStorage.getItem('accessToken');
   const userID = localStorage.getItem('userID');
+  const username = localStorage.getItem('username');
+  const req_token = Encrypt(accessToken,username.toLowerCase())
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,18 +30,23 @@ function JobView() {
             //'Authorization': `Bearer ${token}`, // Pass the access token in headers
           },
           body: JSON.stringify({
-            Token: accessToken,
+            Token: req_token,
             UserID: parseInt(userID, 10),
             db_Obj: {
               Id: 269,
             },
           }),
         });
+        console.log(response);
 
         if (response.ok) {
           const result = await response.json();
-          setData(result);
-          console.log('Table Data:', result);
+          console.log(result, result.Result.data);
+          const sortedData = result.Result.data.sort(
+            (a, b) => new Date(b.CreatedOn) - new Date(a.CreatedOn)
+          );
+          setData(sortedData);
+          console.log('Table Data:', data);
           
         } else {
           setError('Failed to fetch data');
@@ -97,7 +105,25 @@ function JobView() {
           </tr>
         </thead>
         <tbody>
-            <tr>
+        {data.length > 0 ? (
+              data.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.ApplicantName}</td>
+                  <td>{item.ApplicateEmail}</td>
+                  <td>{item.ApplicantContact}</td>
+                  <td>{item.Source}</td>
+                  <td>{item.Stage}</td>
+                  <td>{item.Progress}</td>
+                  <td>{item.BusinessUnit}</td>
+                  <td>{new Date(item.CreatedOn).toLocaleDateString()}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="8">No data available</td>
+              </tr>
+            )}
+            {/*<tr>
                 <td>Test</td>
                 <td>Test@gmail.com</td>
                 <td>8976542457</td>
@@ -146,7 +172,7 @@ function JobView() {
                 <td>In Progress</td>
                 <td>Collaboration</td>
                 <td>12 Aug 2024</td>
-            </tr>
+            </tr>*/}
 
           
         </tbody>
