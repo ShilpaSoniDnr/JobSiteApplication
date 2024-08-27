@@ -1,10 +1,120 @@
 import React from 'react'
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
 import Select from 'react-select';
 import './JobView.css';
 import ScreeningTab from './ScreeningTab';
+import { useState, useEffect } from 'react'
+import { Encrypt } from './TokenEncryptor.mjs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 const FormModel = ({ show, handleClose }) => {
+    const accessToken = localStorage.getItem('accessToken');
+    const userID = localStorage.getItem('userID');
+    const username = localStorage.getItem('username');
+    const req_token = Encrypt(accessToken, username.toLowerCase());
+    const [formData, setFormData] = useState({
+      postName: '',
+      applicantName: '',
+      applicantContact: '',
+      applicantEmail: '',
+      englishProficiency: '',
+      businessUnit: '',
+      progress: '',
+      stage: '',
+      highestEducation: '',
+      yearExp: '',
+      currentCity: '',
+      source: '',
+      description: '',
+      firstInterview: '',
+      firstOutcome: '',
+      firstComments: '',
+      secondInterview: '',
+      machineTest: '',
+      secondComments: '',
+      finalInterview: '',
+      finalOutcome: '',
+      finalComments: '',
+    });
+
+    // Handle input change for text inputs
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+    // Handle select input change
+  const handleSelectChange = (selectedOption, { name }) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: selectedOption ? selectedOption.value : '',
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+      const newItem = {
+          Token: req_token,
+          UserID: parseInt(userID, 10),
+          db_Obj: {
+              ID: -1,
+              connectionString: null,
+              Pk_ColumnName: "Id",
+              ObjectName: "xsheet_JobApplicant",
+              Values: [
+                { key: "name", value: formData.postName },
+                { key: "applicantname", value: formData.applicantName },
+                { key: "applicantcontact", value: formData.applicantContact },
+                { key: "applicateemail", value: formData.applicantEmail },
+                { key: "englishproficiency", value: formData.englishProficiency },
+                { key: "businessunit", value: formData.businessUnit },
+                { key: "progress", value: formData.progress },
+                { key: "stage", value: formData.stage },
+                { key: "applicateeducation", value: formData.highestEducation },
+                { key: "yearsofexperience", value: formData.yearExp },
+                { key: "currentcity", value: formData.currentCity },
+                { key: "source", value: formData.source },
+                { key: "jobdescription", value: formData.description },
+                { key: "interviewtakenbyfr", value: formData.firstInterview },
+                { key: "firstroundoutcome", value: formData.firstOutcome },
+                { key: "commentsfr", value: formData.firstComments },
+                { key: "interviewtakenbym", value: formData.secondInterview },
+                { key: "machinetest", value: formData.machineTest },
+                { key: "commentsm", value: formData.secondComments },
+                { key: "interviewtakenbyf", value: formData.finalInterview },
+                { key: "finalround", value: formData.finalOutcome },
+                { key: "commentsf", value: formData.finalComments },
+              ]
+          }
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/saveUpdateRecord', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newItem),
+        });
+  
+        const result = await response.json();
+        console.log(result);
+        console.log('Item created successfully:', result);
+      } catch (error) {
+        console.error('Error creating item:', error);
+      }
+  
+      handleClose(); // Close the modal after submission
+    };
+
   return (
     <>
     <Modal show={show} onHide={handleClose} dialogClassName="modal-90w">
@@ -18,18 +128,18 @@ const FormModel = ({ show, handleClose }) => {
     <Modal.Body>
     <p className="form-section-header">General Information</p>
         <hr className="form-section-divider" />
-        <Form className="Form-Style">
+        <Form className="Form-Style" onSubmit={handleSubmit}>
           <Row>
             <Col md={6}>
               <Form.Group controlId="formPostName">
                 <Form.Label>Post Name <span className="text-danger">*</span></Form.Label>
-                <Form.Control type="text" />
+                <Form.Control type="text" name="postName" value={formData.postName} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group controlId="formApplicantName">
                 <Form.Label>Applicant Name <span className="text-danger">*</span></Form.Label>
-                <Form.Control type="text" />
+                <Form.Control type="text" name="applicantName" value={formData.applicantName} onChange={handleInputChange} />
               </Form.Group>
             </Col>
           </Row>
@@ -37,13 +147,13 @@ const FormModel = ({ show, handleClose }) => {
             <Col md={6}>
               <Form.Group controlId="formMobilePhone">
                 <Form.Label>Mobile Phone <span className="text-danger">*</span></Form.Label>
-                <Form.Control type="text" />
+                <Form.Control type="number" name="applicantContact" value={formData.applicantContact} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group controlId="formEmail">
                 <Form.Label>Applicant Email <span className="text-danger">*</span></Form.Label>
-                <Form.Control type="email" />
+                <Form.Control type="email" name="applicantEmail" value={formData.applicantEmail} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
           </Row>
@@ -65,13 +175,25 @@ const FormModel = ({ show, handleClose }) => {
                     { value: '9', label: '9' },
                     { value: '10', label: '10' }
                   ]}
+          
                 />
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group controlId="formBusinessUnit">
                 <Form.Label>Business Unit <span className="text-danger">*</span></Form.Label>
-                <Form.Control type="text" />
+                <Row>
+                <Col md={11}>
+                      <Form.Control type="text" name="businessUnit" value={formData.businessUnit} readOnly
+                        plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
+                </Col>
+                <Col md={1}>
+                <button type="button" className="icon-button">
+                 <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
+                </button>
+                </Col>
+                </Row>
+                
               </Form.Group>
             </Col>
           </Row>
@@ -88,13 +210,15 @@ const FormModel = ({ show, handleClose }) => {
                     { value: 'Final Interview', label: 'Final Interview' },
                     { value: 'HR Round', label: 'HR Round' }
                   ]}
+                  
+                  
                 />
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group controlId="formHighestEducation">
                 <Form.Label>Highest Education <span className="text-danger">*</span></Form.Label>
-                <Form.Control as="textarea" rows={3} />
+                <Form.Control as="textarea" rows={3} name="highestEducation" value={formData.highestEducation} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
           </Row>
@@ -102,20 +226,20 @@ const FormModel = ({ show, handleClose }) => {
             <Col md={6}>
               <Form.Group controlId="formYearsExp">
                 <Form.Label>Years of Experience </Form.Label>
-                <Form.Control type="text" />
+                <Form.Control type="text" name="yearExp" value={formData.yearExp} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group controlId="formCurrentCity">
                 <Form.Label>Current City <span className="text-danger">*</span></Form.Label>
-                <Form.Control type="text" />
+                <Form.Control type="text" name="currentCity" value={formData.currentCity} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
           </Row>
           <Row>
             <Col md={6}>
               <Form.Group controlId="formStage">
-                <Form.Label>Progress </Form.Label>
+                <Form.Label>Stage </Form.Label>
                 <Select 
                   placeholder="Select"
                   options={[
@@ -123,13 +247,14 @@ const FormModel = ({ show, handleClose }) => {
                     { value: 'Inactive', label: 'Inactive' },
                     { value: 'On Hold', label: 'On Hold' }
                   ]}
+                  
                 />
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group controlId="formSource">
                 <Form.Label>Source </Form.Label>
-                <Form.Control type="text" />
+                <Form.Control type="text" name="source" value={formData.source} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
           </Row>
@@ -137,7 +262,7 @@ const FormModel = ({ show, handleClose }) => {
           <Col md={12}>
               <Form.Group controlId="formDescription">
                 <Form.Label>Description </Form.Label>
-                <Form.Control as="textarea" rows={3} />
+                <Form.Control as="textarea" rows={3} name="description" value={formData.description} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
           </Row>
@@ -153,7 +278,7 @@ const FormModel = ({ show, handleClose }) => {
           <Col md={6}>
               <Form.Group controlId="formInterviewTaken">
                 <Form.Label>Interview Taken By </Form.Label>
-                <Form.Control type="text" />
+                <Form.Control type="text" name="firstInterview" value={formData.firstInterview} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -166,6 +291,8 @@ const FormModel = ({ show, handleClose }) => {
                     { value: 'Rejected', label: 'Rejected' },
                     { value: 'Did Not Happened', label: 'Did Not Happened' }
                   ]}
+                  value={formData.firstOutcome ? { value: formData.firstOutcome, label: formData.firstOutcome } : null}
+                  onChange={handleSelectChange}
                 />
               </Form.Group>
             </Col>
@@ -174,7 +301,7 @@ const FormModel = ({ show, handleClose }) => {
           <Col md={12}>
               <Form.Group controlId="formComments">
                 <Form.Label>Comments </Form.Label>
-                <Form.Control as="textarea" rows={3} />
+                <Form.Control as="textarea" rows={3} name="firstComments" value={formData.firstComments} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
           </Row>
@@ -184,7 +311,7 @@ const FormModel = ({ show, handleClose }) => {
           <Col md={6}>
               <Form.Group controlId="formSecondInterviewTaken">
                 <Form.Label>Interview Taken By </Form.Label>
-                <Form.Control type="text" />
+                <Form.Control type="text" name="secondInterview" value={formData.secondInterview} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -197,6 +324,8 @@ const FormModel = ({ show, handleClose }) => {
                     { value: 'Rejected', label: 'Rejected' },
                     { value: 'Did Not Happened', label: 'Did Not Happened' }
                   ]}
+                  value={formData.machineTest ? { value: formData.machineTest, label: formData.machineTest } : null}
+                  onChange={handleSelectChange}
                 />
               </Form.Group>
             </Col>
@@ -205,7 +334,7 @@ const FormModel = ({ show, handleClose }) => {
           <Col md={12}>
               <Form.Group controlId="formSecondComments">
                 <Form.Label>Comments </Form.Label>
-                <Form.Control as="textarea" rows={3} />
+                <Form.Control as="textarea" rows={3} name="secondComments" value={formData.secondComments} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
           </Row>
@@ -215,7 +344,7 @@ const FormModel = ({ show, handleClose }) => {
           <Col md={6}>
               <Form.Group controlId="formFinalInterviewTaken">
                 <Form.Label>Interview Taken By </Form.Label>
-                <Form.Control type="text" />
+                <Form.Control type="text" name="finalInterview" value={formData.finalInterview} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -228,6 +357,8 @@ const FormModel = ({ show, handleClose }) => {
                     { value: 'Rejected', label: 'Rejected' },
                     { value: 'Did Not Happened', label: 'Did Not Happened' }
                   ]}
+                  value={formData.finalOutcome ? { value: formData.finalOutcome, label: formData.finalOutcome } : null}
+                  onChange={handleSelectChange}
                 />
               </Form.Group>
             </Col>
@@ -236,7 +367,7 @@ const FormModel = ({ show, handleClose }) => {
           <Col md={12}>
               <Form.Group controlId="formFinalComments">
                 <Form.Label>Comments </Form.Label>
-                <Form.Control as="textarea" rows={3} />
+                <Form.Control as="textarea" rows={3} name="finalComments" value={formData.finalComments} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
           </Row>
@@ -260,17 +391,19 @@ const FormModel = ({ show, handleClose }) => {
               <b>To enable upload please save the record</b></p>
             </Col>
           </Row>
+          <div className='d-flex justify-content-end mt-4 custom-footer'>
+             <Button variant="secondary" onClick={handleClose} className="custom-button">Close</Button>
+             <Button variant="primary" type="submit" className="custom-button">Submit</Button>
+         </div>
+          
+      
         </Form>
         
     </Modal.Body>
-    <Modal.Footer>
-      <Button variant="secondary" onClick={handleClose}>
-        Close
-      </Button>
-      <Button variant="primary" onClick={handleClose}>
-        Save Changes
-      </Button>
-    </Modal.Footer>
+    {/* <Modal.Footer> */}
+     
+      
+    {/* </Modal.Footer> */}
   </Modal>
   </>
     

@@ -46,7 +46,7 @@ function JobView() {
             (a, b) => new Date(b.CreatedOn) - new Date(a.CreatedOn)
           );
           setData(sortedData);
-          console.log('Table Data:', data);
+      
           
         } else {
           setError('Failed to fetch data');

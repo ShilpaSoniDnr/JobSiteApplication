@@ -113,6 +113,14 @@
   .Form-Style {
     color: #73879C;
   }
+  /*Custom form footer*/
+  .custom-footer .custom-button {
+    margin-right: 10px; /* Adjust as needed */
+}
+
+.custom-footer .custom-button:last-child {
+    margin-right: 0; /* Ensure the last button has no right margin */
+}
   /* Screening Tab Design */
   .process-bar {
     display: flex;
@@ -175,5 +183,42 @@
   .step.active::before {
     border-left-color: #007bff;
   }
+  /*Search input CSS*/
+  .input-with-icon {
+    display: flex;
+    align-items: center;
+  }
+  
+  .form-control-grey-bg {
+    background-color: #e9ecef; /* Light grey background */
+    border-radius: 4px; /* Maintain the rounded corners */
+    padding: 0.375rem 0.75rem; /* Default Bootstrap padding */
+    color: #495057; /* Default Bootstrap text color */
+  }
+  
+  .view-only-input {
+    border: none; /* No border to match the plain text style */
+  }
+  
+  .icon-button {
+    background-color: transparent; /* Make the button background transparent */
+    border: none; /* Remove the button border */
+    color: #007bff; /* Use a blue color for the icon */
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: -35px; /* Adjust this to position the icon closer to the input field */
+  }
+  
+  .icon-button i {
+    font-size: 16px;
+    background-color: #007bff; /* Blue background for the icon */
+    padding: 10px; /* Ensure padding around the icon */
+    border-radius: 4px; /* Rounded corners for the icon background */
+    color: white; /* White color for the icon itself */
+  }
+  
   
   
