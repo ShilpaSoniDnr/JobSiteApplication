@@ -10,8 +10,11 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
+import BusinessUnitModel from './BusinessUnitModel';
 
-const FormModel = ({ show, handleClose }) => {
+const FormModel = ({ show, handleClose, showBuModal, handleCloseBu  }) => {
+    const [showBuModal, setShowBuModal] = useState(false);
+    const [selectedBusinessItem, setSelectedBusinessItem] = useState('');
     const accessToken = localStorage.getItem('accessToken');
     const userID = localStorage.getItem('userID');
     const username = localStorage.getItem('username');
@@ -40,6 +43,12 @@ const FormModel = ({ show, handleClose }) => {
       finalOutcome: '',
       finalComments: '',
     });
+    const handleSearchClick = () => {
+      console.log("You have clicked on search");
+      setShowBuModal(true);
+  };
+
+  const handleCloseBu = () => setShowBuModal(false);
 
     // Handle input change for text inputs
   const handleInputChange = (e) => {
@@ -49,6 +58,9 @@ const FormModel = ({ show, handleClose }) => {
       [name]: value,
     }));
   };
+  const handleSelectBusinessItem = (itemName) => {
+    setSelectedBusinessItem(itemName);
+};
 
     // Handle select input change
   const handleSelectChange = (selectedOption, { name }) => {
@@ -114,9 +126,12 @@ const FormModel = ({ show, handleClose }) => {
   
       handleClose(); // Close the modal after submission
     };
+     //Fetch Business Unit data
+     
 
   return (
     <>
+    {/* New Form Model */}
     <Modal show={show} onHide={handleClose} dialogClassName="modal-90w">
     <Modal.Header closeButton className="custom-modal-header">
         <div className="d-flex align-items-center">
@@ -184,11 +199,11 @@ const FormModel = ({ show, handleClose }) => {
                 <Form.Label>Business Unit <span className="text-danger">*</span></Form.Label>
                 <Row>
                 <Col md={11}>
-                      <Form.Control type="text" name="businessUnit" value={formData.businessUnit} readOnly
+                      <Form.Control type="text" name="businessUnit" value={selectedBusinessItem} readOnly
                         plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
                 </Col>
                 <Col md={1}>
-                <button type="button" className="icon-button">
+                <button type="button" className="icon-button" onClick={handleSearchClick}>
                  <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
                 </button>
                 </Col>
@@ -278,7 +293,17 @@ const FormModel = ({ show, handleClose }) => {
           <Col md={6}>
               <Form.Group controlId="formInterviewTaken">
                 <Form.Label>Interview Taken By </Form.Label>
-                <Form.Control type="text" name="firstInterview" value={formData.firstInterview} onChange={handleInputChange}/>
+                <Row>
+                <Col md={11}>
+                      <Form.Control type="text" name="firstInterview" value={formData.firstInterview} readOnly
+                        plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
+                </Col>
+                <Col md={1}>
+                <button type="button" className="icon-button" onClick={handleSearchClick}>
+                 <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
+                </button>
+                </Col>
+                </Row>
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -311,7 +336,17 @@ const FormModel = ({ show, handleClose }) => {
           <Col md={6}>
               <Form.Group controlId="formSecondInterviewTaken">
                 <Form.Label>Interview Taken By </Form.Label>
-                <Form.Control type="text" name="secondInterview" value={formData.secondInterview} onChange={handleInputChange}/>
+                <Row>
+                <Col md={11}>
+                      <Form.Control type="text" name="secondInterview" value={formData.secondInterview} readOnly
+                        plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
+                </Col>
+                <Col md={1}>
+                <button type="button" className="icon-button" onClick={handleSearchClick}>
+                 <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
+                </button>
+                </Col>
+                </Row>
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -344,7 +379,17 @@ const FormModel = ({ show, handleClose }) => {
           <Col md={6}>
               <Form.Group controlId="formFinalInterviewTaken">
                 <Form.Label>Interview Taken By </Form.Label>
-                <Form.Control type="text" name="finalInterview" value={formData.finalInterview} onChange={handleInputChange}/>
+                <Row>
+                <Col md={11}>
+                      <Form.Control type="text" name="finalInterview" value={formData.finalInterview} readOnly
+                        plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
+                </Col>
+                <Col md={1}>
+                <button type="button" className="icon-button" onClick={handleSearchClick}>
+                 <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
+                </button>
+                </Col>
+                </Row>
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -404,7 +449,12 @@ const FormModel = ({ show, handleClose }) => {
      
       
     {/* </Modal.Footer> */}
+    
   </Modal>
+  {/* Business Unit Model */}
+  <BusinessUnitModel showBuModal={showBuModal} handleCloseBu={handleCloseBu} onSelectBusinessItem={handleSelectBusinessItem}/>
+ 
+  
   </>
     
   )

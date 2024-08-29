@@ -9,9 +9,14 @@ import FormModel from './FormModel';
 import { Encrypt } from './TokenEncryptor.mjs';
 
 function JobView() {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [showFormModel, setShowFormModel] = useState(false);
+  const handleOpenFormModel = () => {
+    setShowFormModel(true); // Opens the primary modal
+  };
+
+  const handleCloseFormModel = () => {
+    setShowFormModel(false); // Closes the primary modal
+  };
   const [data, setData] = useState([{}]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -84,8 +89,8 @@ function JobView() {
           </div>
         </div>
         <div className="custom-btn d-flex align-items-center justify-content-center">
-          <button className="btn btn-success btn-sm mx-1"><i className="fas fa-plus" onClick={handleShow}></i> New</button>
-          <button className="btn btn-primary btn-sm mx-1"><i className="fas fa-edit" onClick={handleShow}></i> Edit</button>
+          <button className="btn btn-success btn-sm mx-1"><i className="fas fa-plus" onClick={handleOpenFormModel}></i> New</button>
+          <button className="btn btn-primary btn-sm mx-1"><i className="fas fa-edit" onClick={handleOpenFormModel}></i> Edit</button>
           <button className="btn btn-danger btn-sm mx-1"><i className="fas fa-trash"></i> Trash</button>
         </div>
       </div>
@@ -177,7 +182,7 @@ function JobView() {
           
         </tbody>
       </table>
-      <FormModel show={show} handleClose={handleClose} />
+      <FormModel show={showFormModel} handleClose={handleCloseFormModel} />
     </div>
     </>
 
