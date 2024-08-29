@@ -11,10 +11,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import BusinessUnitModel from './BusinessUnitModel';
+import InterviewModel from './InterviewModel';
 
-const FormModel = ({ show, handleClose, showBuModal, handleCloseBu  }) => {
+const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showInterviewModal, handleCloseInterview  }) => {
     const [showBuModal, setShowBuModal] = useState(false);
+    const [showInterviewModal, setShowInterviewModal] = useState(false);
     const [selectedBusinessItem, setSelectedBusinessItem] = useState('');
+    const [selectedInterviewItem, setSelectedInterviewItem] = useState('');
+    const [selectedInterviewSecItem, setSelectedInterviewSecItem] = useState('');
+    const [selectedInterviewFinItem, setSelectedInterviewFinItem] = useState('');
     const accessToken = localStorage.getItem('accessToken');
     const userID = localStorage.getItem('userID');
     const username = localStorage.getItem('username');
@@ -43,12 +48,21 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu  }) => {
       finalOutcome: '',
       finalComments: '',
     });
+    //Business Model
     const handleSearchClick = () => {
       console.log("You have clicked on search");
       setShowBuModal(true);
   };
 
   const handleCloseBu = () => setShowBuModal(false);
+
+  //Interview Modal
+  const handleInterviewClick = () => {
+    console.log("You have clicked on search");
+    setShowInterviewModal(true);
+};
+
+const handleCloseInterview = () => setShowInterviewModal(false);
 
     // Handle input change for text inputs
   const handleInputChange = (e) => {
@@ -60,6 +74,15 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu  }) => {
   };
   const handleSelectBusinessItem = (itemName) => {
     setSelectedBusinessItem(itemName);
+};
+const handleSelectInterviewItem = (itemName) => {
+  setSelectedInterviewItem(itemName);
+};
+const handleSelectInterviewSecItem = (itemName) => {
+  setSelectedInterviewItem(itemName);
+};
+const handleSelectInterviewFinItem = (itemName) => {
+  setSelectedInterviewItem(itemName);
 };
 
     // Handle select input change
@@ -295,11 +318,11 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu  }) => {
                 <Form.Label>Interview Taken By </Form.Label>
                 <Row>
                 <Col md={11}>
-                      <Form.Control type="text" name="firstInterview" value={formData.firstInterview} readOnly
+                      <Form.Control type="text" name="firstInterview" value={selectedInterviewItem} readOnly
                         plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
                 </Col>
                 <Col md={1}>
-                <button type="button" className="icon-button" onClick={handleSearchClick}>
+                <button type="button" className="icon-button" onClick={handleInterviewClick}>
                  <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
                 </button>
                 </Col>
@@ -338,11 +361,11 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu  }) => {
                 <Form.Label>Interview Taken By </Form.Label>
                 <Row>
                 <Col md={11}>
-                      <Form.Control type="text" name="secondInterview" value={formData.secondInterview} readOnly
+                      <Form.Control type="text" name="secondInterview" value={selectedInterviewSecItem} readOnly
                         plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
                 </Col>
                 <Col md={1}>
-                <button type="button" className="icon-button" onClick={handleSearchClick}>
+                <button type="button" className="icon-button" onClick={handleInterviewClick}>
                  <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
                 </button>
                 </Col>
@@ -381,11 +404,11 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu  }) => {
                 <Form.Label>Interview Taken By </Form.Label>
                 <Row>
                 <Col md={11}>
-                      <Form.Control type="text" name="finalInterview" value={formData.finalInterview} readOnly
+                      <Form.Control type="text" name="finalInterview" value={selectedInterviewFinItem} readOnly
                         plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
                 </Col>
                 <Col md={1}>
-                <button type="button" className="icon-button" onClick={handleSearchClick}>
+                <button type="button" className="icon-button" onClick={handleInterviewClick}>
                  <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
                 </button>
                 </Col>
@@ -453,6 +476,8 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu  }) => {
   </Modal>
   {/* Business Unit Model */}
   <BusinessUnitModel showBuModal={showBuModal} handleCloseBu={handleCloseBu} onSelectBusinessItem={handleSelectBusinessItem}/>
+  {/* Interview Model */}
+  <InterviewModel showInterviewModal={showInterviewModal} handleCloseInterview={handleCloseInterview} onSelectInterviewItem={handleSelectInterviewItem} onSelectInterviewSecItem={handleSelectInterviewSecItem} onSelectInterviewFinItem={handleSelectInterviewFinItem}/>
  
   
   </>
