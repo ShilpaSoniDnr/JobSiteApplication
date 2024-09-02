@@ -10,20 +10,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-function InterviewModel({showInterviewModal, handleCloseInterview, onSelectInterviewItem}) {
-    const [Interviewdata, setDataInterview] = useState([{}]);
-    const [loadingInterview, setLoadingInterview] = useState(true);
-    const [errorInterview, setErrorInterview] = useState('');
+function InterviewModelSec({showInterviewSecModal, handleCloseInterviewSec , onSelectInterviewSecItem}) {
+    const [InterviewSecdata, setDataInterviewSec] = useState([{}]);
+    const [loadingInterviewSec, setLoadingInterviewSec] = useState(true);
+    const [errorInterviewSec, setErrorInterviewSec] = useState('');
     const accessToken = localStorage.getItem('accessToken');
     const userID = localStorage.getItem('userID');
     const username = localStorage.getItem('username');
     const req_token = Encrypt(accessToken, username.toLowerCase());
     console.log(req_token);
 
-    //Fetch Interview data
     useEffect(() => {
-        if (showInterviewModal) {  // Fetch data only when modal is shown
-            setLoadingInterview(true); // Set loading state when fetching starts
+        if (showInterviewSecModal) {  // Fetch data only when modal is shown
+            setLoadingInterviewSec(true); // Set loading state when fetching starts
             const fetchData = async () => {
                 try {
                     const response = await fetch('http://localhost:3000/getbussinessData', {
@@ -42,33 +41,32 @@ function InterviewModel({showInterviewModal, handleCloseInterview, onSelectInter
                     });
 
                     if (response.ok) {
-                        const resultInterview = await response.json();
-                        console.log(resultInterview);
-                        console.log(resultInterview, resultInterview.Result.data);
+                        const resultInterviewSec = await response.json();
+                        console.log(resultInterviewSec);
+                        console.log(resultInterviewSec, resultInterviewSec.Result.data);
                         
-                        setDataInterview(resultInterview.Result.data);
+                        setDataInterviewSec(resultInterviewSec.Result.data);
                     } else {
-                        setErrorInterview('Failed to fetch data');
+                        setErrorInterviewSec('Failed to fetch data');
                     }
                 } catch (error) {
-                    setErrorInterview('Error fetching data');
+                    setErrorInterviewSec('Error fetching data');
                 } finally {
-                    setLoadingInterview(false); // Set loading state to false after fetching is done
+                    setLoadingInterviewSec(false); // Set loading state to false after fetching is done
                 }
             };
 
             fetchData();
         }
-    }, [showInterviewModal, req_token, userID]);
-    const handleInterviewClick = (item) => {
-        onSelectInterviewItem(item.DisplayName); // Assuming 'Name' is the field to set in input
+    }, [showInterviewSecModal, req_token, userID]);
+
+    const handleInterviewSecClick = (item) => {
+        onSelectInterviewSecItem(item.DisplayName); // Assuming 'Name' is the field to set in input
          
     };
-    
-   
   return (
     <>
-    <Modal show={showInterviewModal} onHide={handleCloseInterview}>
+    <Modal show={showInterviewSecModal} onHide={handleCloseInterviewSec}>
         <Modal.Header closeButton className="custom-modal-header">
           <Modal.Title><h5>Users</h5></Modal.Title>
         </Modal.Header>
@@ -82,9 +80,9 @@ function InterviewModel({showInterviewModal, handleCloseInterview, onSelectInter
               </tr>
             </thead>
             <tbody>
-            {Interviewdata.length > 0 ? (
-              Interviewdata.map((item, index) => (
-              <tr key={index} onClick={() => handleInterviewClick(item)}>
+            {InterviewSecdata.length > 0 ? (
+              InterviewSecdata.map((item, index) => (
+              <tr key={index} onClick={() => handleInterviewSecClick(item)}>
                 <td>{item.DisplayName}</td>
                 <td>{item.uEmail}</td>
               </tr>
@@ -120,10 +118,10 @@ function InterviewModel({showInterviewModal, handleCloseInterview, onSelectInter
           </table>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseInterview}>
+          <Button variant="secondary" onClick={handleCloseInterviewSec}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleCloseInterview}>
+          <Button variant="primary" onClick={handleCloseInterviewSec}>
             Ok
           </Button>
         </Modal.Footer>
@@ -132,4 +130,4 @@ function InterviewModel({showInterviewModal, handleCloseInterview, onSelectInter
   )
 }
 
-export default InterviewModel
+export default InterviewModelSec

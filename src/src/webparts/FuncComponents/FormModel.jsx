@@ -12,14 +12,19 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import BusinessUnitModel from './BusinessUnitModel';
 import InterviewModel from './InterviewModel';
+import InterviewModelSec from './InterviewModelSec';
+import FinalInterviewModel from './FinalInterviewModel';
 
-const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showInterviewModal, handleCloseInterview  }) => {
+
+const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showInterviewModal, handleCloseInterview, showInterviewSecModal, handleCloseInterviewSec, showFinalInterviewModal, handleCloseFinalInterview}) => {
     const [showBuModal, setShowBuModal] = useState(false);
     const [showInterviewModal, setShowInterviewModal] = useState(false);
+    const [showInterviewSecModal, setShowInterviewSecModal] = useState(false);
+    const [showFinalInterviewModal, setShowFinalInterviewModal] = useState(false);
     const [selectedBusinessItem, setSelectedBusinessItem] = useState('');
     const [selectedInterviewItem, setSelectedInterviewItem] = useState('');
     const [selectedInterviewSecItem, setSelectedInterviewSecItem] = useState('');
-    const [selectedInterviewFinItem, setSelectedInterviewFinItem] = useState('');
+    const [selectedFinalInterviewItem, setSelectedFinalInterviewItem] = useState('');
     const accessToken = localStorage.getItem('accessToken');
     const userID = localStorage.getItem('userID');
     const username = localStorage.getItem('username');
@@ -64,6 +69,22 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showIntervie
 
 const handleCloseInterview = () => setShowInterviewModal(false);
 
+//Interview Sec Modal
+const handleInterviewSecClick = () => {
+  console.log("You have clicked on search");
+  setShowInterviewSecModal(true);
+};
+
+const handleCloseInterviewSec = () => setShowInterviewSecModal(false);
+
+//Interview Fin Modal
+const handleFinalInterview = () => {
+  console.log("You have clicked on search");
+  setShowFinalInterviewModal(true);
+};
+
+const handleCloseFinalInterview = () => setShowFinalInterviewModal(false);
+
     // Handle input change for text inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -79,11 +100,12 @@ const handleSelectInterviewItem = (itemName) => {
   setSelectedInterviewItem(itemName);
 };
 const handleSelectInterviewSecItem = (itemName) => {
-  setSelectedInterviewItem(itemName);
+  setSelectedInterviewSecItem(itemName);
 };
-const handleSelectInterviewFinItem = (itemName) => {
-  setSelectedInterviewItem(itemName);
+const handleSelectInterviewFinalItem = (itemName) => {
+  setSelectedFinalInterviewItem(itemName);
 };
+
 
     // Handle select input change
   const handleSelectChange = (selectedOption, { name }) => {
@@ -202,17 +224,19 @@ const handleSelectInterviewFinItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: '1', label: '1' },
-                    { value: '2', label: '2' },
-                    { value: '3', label: '3' },
-                    { value: '4', label: '4' },
-                    { value: '5', label: '5' },
-                    { value: '6', label: '6' },
-                    { value: '7', label: '7' },
-                    { value: '8', label: '8' },
-                    { value: '9', label: '9' },
-                    { value: '10', label: '10' }
+                    { value: 1, label: '1' },
+                    { value: 2, label: '2' },
+                    { value: 3, label: '3' },
+                    { value: 4, label: '4' },
+                    { value: 5, label: '5' },
+                    { value: 6, label: '6' },
+                    { value: 7, label: '7' },
+                    { value: 8, label: '8' },
+                    { value: 9, label: '9' },
+                    { value: 10, label: '10' }
                   ]}
+                  name="englishProficiency"
+                  onChange={handleSelectChange}
           
                 />
               </Form.Group>
@@ -242,12 +266,14 @@ const handleSelectInterviewFinItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 'Screening', label: 'Screening' },
-                    { value: 'First Interview', label: 'First Interview' },
-                    { value: 'Machine Test', label: 'Machine Test' },
-                    { value: 'Final Interview', label: 'Final Interview' },
-                    { value: 'HR Round', label: 'HR Round' }
+                    { value: 1, label: 'Screening' },
+                    { value: 2, label: 'First Interview' },
+                    { value: 3, label: 'Machine Test' },
+                    { value: 4, label: 'Final Interview' },
+                    { value: 5, label: 'HR Round' }
                   ]}
+                  name="progressform"
+                  onChange={handleSelectChange}
                   
                   
                 />
@@ -281,10 +307,12 @@ const handleSelectInterviewFinItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 'Active', label: 'Active' },
-                    { value: 'Inactive', label: 'Inactive' },
-                    { value: 'On Hold', label: 'On Hold' }
+                    { value: 1, label: 'Active' },
+                    { value: 2, label: 'Inactive' },
+                    { value: 3, label: 'On Hold' }
                   ]}
+                  name="stageform"
+                  onChange={handleSelectChange}
                   
                 />
               </Form.Group>
@@ -335,12 +363,13 @@ const handleSelectInterviewFinItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 'Selected', label: 'Selected' },
-                    { value: 'Rejected', label: 'Rejected' },
-                    { value: 'Did Not Happened', label: 'Did Not Happened' }
+                    { value: 1, label: 'Selected' },
+                    { value: 2, label: 'Rejected' },
+                    { value: 3, label: 'Did Not Happened' }
                   ]}
-                  value={formData.firstOutcome ? { value: formData.firstOutcome, label: formData.firstOutcome } : null}
+                  name="firstoutcome"
                   onChange={handleSelectChange}
+                  
                 />
               </Form.Group>
             </Col>
@@ -365,7 +394,7 @@ const handleSelectInterviewFinItem = (itemName) => {
                         plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
                 </Col>
                 <Col md={1}>
-                <button type="button" className="icon-button" onClick={handleInterviewClick}>
+                <button type="button" className="icon-button" onClick={handleInterviewSecClick}>
                  <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
                 </button>
                 </Col>
@@ -378,12 +407,13 @@ const handleSelectInterviewFinItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 'Selected', label: 'Selected' },
-                    { value: 'Rejected', label: 'Rejected' },
-                    { value: 'Did Not Happened', label: 'Did Not Happened' }
+                    { value: 1, label: 'Selected' },
+                    { value: 2, label: 'Rejected' },
+                    { value: 3, label: 'Did Not Happened' }
                   ]}
-                  value={formData.machineTest ? { value: formData.machineTest, label: formData.machineTest } : null}
+                  name="secondoutcome"
                   onChange={handleSelectChange}
+                  
                 />
               </Form.Group>
             </Col>
@@ -404,11 +434,11 @@ const handleSelectInterviewFinItem = (itemName) => {
                 <Form.Label>Interview Taken By </Form.Label>
                 <Row>
                 <Col md={11}>
-                      <Form.Control type="text" name="finalInterview" value={selectedInterviewFinItem} readOnly
+                      <Form.Control type="text" name="finalInterview" value={selectedFinalInterviewItem} readOnly
                         plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
                 </Col>
                 <Col md={1}>
-                <button type="button" className="icon-button" onClick={handleInterviewClick}>
+                <button type="button" className="icon-button" onClick={handleFinalInterview}>
                  <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
                 </button>
                 </Col>
@@ -421,12 +451,13 @@ const handleSelectInterviewFinItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 'Selected', label: 'Selected' },
-                    { value: 'Rejected', label: 'Rejected' },
-                    { value: 'Did Not Happened', label: 'Did Not Happened' }
+                    { value: 1, label: 'Selected' },
+                    { value: 2, label: 'Rejected' },
+                    { value: 3, label: 'Did Not Happened' }
                   ]}
-                  value={formData.finalOutcome ? { value: formData.finalOutcome, label: formData.finalOutcome } : null}
+                  name="thirdoutcome"
                   onChange={handleSelectChange}
+                 
                 />
               </Form.Group>
             </Col>
@@ -477,9 +508,11 @@ const handleSelectInterviewFinItem = (itemName) => {
   {/* Business Unit Model */}
   <BusinessUnitModel showBuModal={showBuModal} handleCloseBu={handleCloseBu} onSelectBusinessItem={handleSelectBusinessItem}/>
   {/* Interview Model */}
-  <InterviewModel showInterviewModal={showInterviewModal} handleCloseInterview={handleCloseInterview} onSelectInterviewItem={handleSelectInterviewItem} onSelectInterviewSecItem={handleSelectInterviewSecItem} onSelectInterviewFinItem={handleSelectInterviewFinItem}/>
- 
-  
+  <InterviewModel showInterviewModal={showInterviewModal} handleCloseInterview={handleCloseInterview} onSelectInterviewItem={handleSelectInterviewItem}/>
+   {/* Interview Sec Model */}
+  <InterviewModelSec showInterviewSecModal={showInterviewSecModal} handleCloseInterviewSec={handleCloseInterviewSec} onSelectInterviewSecItem={handleSelectInterviewSecItem}/>
+  {/* Interview Fin Model */}
+  <FinalInterviewModel showFinalInterviewModal={showFinalInterviewModal} handleCloseFinalInterview={handleCloseFinalInterview} onSelectInterviewItemFinal={handleSelectInterviewFinalItem}/>
   </>
     
   )
