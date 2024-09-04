@@ -18,7 +18,7 @@ function FinalInterviewModel({showFinalInterviewModal, handleCloseFinalInterview
     const userID = localStorage.getItem('userID');
     const username = localStorage.getItem('username');
     const req_token = Encrypt(accessToken, username.toLowerCase());
-    console.log(req_token);
+    
 
     useEffect(() => {
         if (showFinalInterviewModal) {  // Fetch data only when modal is shown

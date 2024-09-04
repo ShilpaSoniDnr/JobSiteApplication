@@ -18,7 +18,7 @@ function InterviewModelSec({showInterviewSecModal, handleCloseInterviewSec , onS
     const userID = localStorage.getItem('userID');
     const username = localStorage.getItem('username');
     const req_token = Encrypt(accessToken, username.toLowerCase());
-    console.log(req_token);
+    
 
     useEffect(() => {
         if (showInterviewSecModal) {  // Fetch data only when modal is shown

@@ -18,7 +18,7 @@ function InterviewModel({showInterviewModal, handleCloseInterview, onSelectInter
     const userID = localStorage.getItem('userID');
     const username = localStorage.getItem('username');
     const req_token = Encrypt(accessToken, username.toLowerCase());
-    console.log(req_token);
+    
 
     //Fetch Interview data
     useEffect(() => {

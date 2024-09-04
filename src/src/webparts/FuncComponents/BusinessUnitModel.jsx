@@ -18,7 +18,7 @@ const BusinessUnitModel = ({showBuModal, handleCloseBu, onSelectBusinessItem})  
     const userID = localStorage.getItem('userID');
     const username = localStorage.getItem('username');
     const req_token = Encrypt(accessToken, username.toLowerCase());
-    console.log(req_token);
+    
 
 
 

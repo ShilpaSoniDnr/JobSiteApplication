@@ -61,6 +61,8 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showIntervie
 
   const handleCloseBu = () => setShowBuModal(false);
 
+  
+
   //Interview Modal
   const handleInterviewClick = () => {
     console.log("You have clicked on search");
@@ -68,6 +70,8 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showIntervie
 };
 
 const handleCloseInterview = () => setShowInterviewModal(false);
+
+
 
 //Interview Sec Modal
 const handleInterviewSecClick = () => {
@@ -77,6 +81,8 @@ const handleInterviewSecClick = () => {
 
 const handleCloseInterviewSec = () => setShowInterviewSecModal(false);
 
+
+
 //Interview Fin Modal
 const handleFinalInterview = () => {
   console.log("You have clicked on search");
@@ -84,6 +90,8 @@ const handleFinalInterview = () => {
 };
 
 const handleCloseFinalInterview = () => setShowFinalInterviewModal(false);
+
+
 
     // Handle input change for text inputs
   const handleInputChange = (e) => {
@@ -132,7 +140,7 @@ const handleSelectInterviewFinalItem = (itemName) => {
                 { key: "applicantcontact", value: formData.applicantContact },
                 { key: "applicateemail", value: formData.applicantEmail },
                 { key: "englishproficiency", value: formData.englishProficiency },
-                { key: "businessunit", value: formData.businessUnit },
+                { key: "businessunit", value: selectedBusinessItem },
                 { key: "progress", value: formData.progress },
                 { key: "stage", value: formData.stage },
                 { key: "applicateeducation", value: formData.highestEducation },
@@ -140,13 +148,13 @@ const handleSelectInterviewFinalItem = (itemName) => {
                 { key: "currentcity", value: formData.currentCity },
                 { key: "source", value: formData.source },
                 { key: "jobdescription", value: formData.description },
-                { key: "interviewtakenbyfr", value: formData.firstInterview },
+                { key: "interviewtakenbyfr", value: selectedInterviewItem },
                 { key: "firstroundoutcome", value: formData.firstOutcome },
                 { key: "commentsfr", value: formData.firstComments },
-                { key: "interviewtakenbym", value: formData.secondInterview },
+                { key: "interviewtakenbym", value: selectedInterviewSecItem },
                 { key: "machinetest", value: formData.machineTest },
                 { key: "commentsm", value: formData.secondComments },
-                { key: "interviewtakenbyf", value: formData.finalInterview },
+                { key: "interviewtakenbyf", value: selectedFinalInterviewItem },
                 { key: "finalround", value: formData.finalOutcome },
                 { key: "commentsf", value: formData.finalComments },
               ]
@@ -165,6 +173,7 @@ const handleSelectInterviewFinalItem = (itemName) => {
         const result = await response.json();
         console.log(result);
         console.log('Item created successfully:', result);
+        console.log('Form submitted data:', newItem);
       } catch (error) {
         console.error('Error creating item:', error);
       }
@@ -207,13 +216,13 @@ const handleSelectInterviewFinalItem = (itemName) => {
             <Col md={6}>
               <Form.Group controlId="formMobilePhone">
                 <Form.Label>Mobile Phone <span className="text-danger">*</span></Form.Label>
-                <Form.Control type="number" name="applicantContact" value={formData.applicantContact} onChange={handleInputChange}/>
+                <Form.Control type="text" name="applicantContact" value={formData.applicantContact} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group controlId="formEmail">
                 <Form.Label>Applicant Email <span className="text-danger">*</span></Form.Label>
-                <Form.Control type="email" name="applicantEmail" value={formData.applicantEmail} onChange={handleInputChange}/>
+                <Form.Control type="text" name="applicantEmail" value={formData.applicantEmail} onChange={handleInputChange}/>
               </Form.Group>
             </Col>
           </Row>
@@ -224,16 +233,16 @@ const handleSelectInterviewFinalItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 1, label: '1' },
-                    { value: 2, label: '2' },
-                    { value: 3, label: '3' },
-                    { value: 4, label: '4' },
-                    { value: 5, label: '5' },
-                    { value: 6, label: '6' },
-                    { value: 7, label: '7' },
-                    { value: 8, label: '8' },
-                    { value: 9, label: '9' },
-                    { value: 10, label: '10' }
+                    { value: '1', label: '1' },
+                    { value: '2', label: '2' },
+                    { value: '3', label: '3' },
+                    { value: '4', label: '4' },
+                    { value: '5', label: '5' },
+                    { value: '6', label: '6' },
+                    { value: '7', label: '7' },
+                    { value: '8', label: '8' },
+                    { value: '9', label: '9' },
+                    { value: '10', label: '10' }
                   ]}
                   name="englishProficiency"
                   onChange={handleSelectChange}
@@ -266,11 +275,11 @@ const handleSelectInterviewFinalItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 1, label: 'Screening' },
-                    { value: 2, label: 'First Interview' },
-                    { value: 3, label: 'Machine Test' },
-                    { value: 4, label: 'Final Interview' },
-                    { value: 5, label: 'HR Round' }
+                    { value: '1', label: 'Screening' },
+                    { value: '2', label: 'First Interview' },
+                    { value: '3', label: 'Machine Test' },
+                    { value: '4', label: 'Final Interview' },
+                    { value: '5', label: 'HR Round' }
                   ]}
                   name="progressform"
                   onChange={handleSelectChange}
@@ -307,9 +316,9 @@ const handleSelectInterviewFinalItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 1, label: 'Active' },
-                    { value: 2, label: 'Inactive' },
-                    { value: 3, label: 'On Hold' }
+                    { value: '1', label: 'Active' },
+                    { value: '2', label: 'Inactive' },
+                    { value: '3', label: 'On Hold' }
                   ]}
                   name="stageform"
                   onChange={handleSelectChange}
@@ -363,9 +372,9 @@ const handleSelectInterviewFinalItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 1, label: 'Selected' },
-                    { value: 2, label: 'Rejected' },
-                    { value: 3, label: 'Did Not Happened' }
+                    { value: '1', label: 'Selected' },
+                    { value: '2', label: 'Rejected' },
+                    { value: '3', label: 'Did Not Happened' }
                   ]}
                   name="firstoutcome"
                   onChange={handleSelectChange}
@@ -407,9 +416,9 @@ const handleSelectInterviewFinalItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 1, label: 'Selected' },
-                    { value: 2, label: 'Rejected' },
-                    { value: 3, label: 'Did Not Happened' }
+                    { value: '1', label: 'Selected' },
+                    { value: '2', label: 'Rejected' },
+                    { value: '3', label: 'Did Not Happened' }
                   ]}
                   name="secondoutcome"
                   onChange={handleSelectChange}
@@ -451,9 +460,9 @@ const handleSelectInterviewFinalItem = (itemName) => {
                 <Select 
                   placeholder="Select"
                   options={[
-                    { value: 1, label: 'Selected' },
-                    { value: 2, label: 'Rejected' },
-                    { value: 3, label: 'Did Not Happened' }
+                    { value: '1', label: 'Selected' },
+                    { value: '2', label: 'Rejected' },
+                    { value: '3', label: 'Did Not Happened' }
                   ]}
                   name="thirdoutcome"
                   onChange={handleSelectChange}
