@@ -22,9 +22,13 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showIntervie
     const [showInterviewSecModal, setShowInterviewSecModal] = useState(false);
     const [showFinalInterviewModal, setShowFinalInterviewModal] = useState(false);
     const [selectedBusinessItem, setSelectedBusinessItem] = useState('');
+    const [selectedBusinessItemId, setSelectedBusinessItemId] = useState(null);
     const [selectedInterviewItem, setSelectedInterviewItem] = useState('');
+    const [selectedInterviewItemId, setSelectedInterviewItemId] = useState(null);
     const [selectedInterviewSecItem, setSelectedInterviewSecItem] = useState('');
+    const [selectedInterviewSecItemId, setSelectedInterviewSecItemId] = useState(null);
     const [selectedFinalInterviewItem, setSelectedFinalInterviewItem] = useState('');
+    const [selectedFinalInterviewItemId, setSelectedFinalInterviewItemId] = useState(null);
     const accessToken = localStorage.getItem('accessToken');
     const userID = localStorage.getItem('userID');
     const username = localStorage.getItem('username');
@@ -35,7 +39,7 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showIntervie
       applicantContact: '',
       applicantEmail: '',
       englishProficiency: '',
-      businessUnit: '',
+      businessUnitId: '',
       progress: '',
       stage: '',
       highestEducation: '',
@@ -101,17 +105,24 @@ const handleCloseFinalInterview = () => setShowFinalInterviewModal(false);
       [name]: value,
     }));
   };
-  const handleSelectBusinessItem = (itemName) => {
-    setSelectedBusinessItem(itemName);
+  //const handleSelectBusinessItem = (itemName) => {
+  //  setSelectedBusinessItem(itemName);
+  const handleSelectBusinessItem = (name, DT_RowId) => {
+    setSelectedBusinessItem(name);
+    setSelectedBusinessItemId(DT_RowId);
 };
-const handleSelectInterviewItem = (itemName) => {
-  setSelectedInterviewItem(itemName);
+
+const handleSelectInterviewItem = (DisplayName, DT_RowId ) => {
+  setSelectedInterviewItem(DisplayName);
+  setSelectedInterviewItemId(DT_RowId);
 };
-const handleSelectInterviewSecItem = (itemName) => {
-  setSelectedInterviewSecItem(itemName);
+const handleSelectInterviewSecItem = (DisplayName, DT_RowId) => {
+  setSelectedInterviewSecItem(DisplayName);
+  setSelectedInterviewSecItemId(DT_RowId);
 };
-const handleSelectInterviewFinalItem = (itemName) => {
-  setSelectedFinalInterviewItem(itemName);
+const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
+  setSelectedFinalInterviewItem(DisplayName);
+  setSelectedFinalInterviewItemId(DT_RowId);
 };
 
 
@@ -125,6 +136,7 @@ const handleSelectInterviewFinalItem = (itemName) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
 
       const newItem = {
           Token: req_token,
@@ -140,7 +152,7 @@ const handleSelectInterviewFinalItem = (itemName) => {
                 { key: "applicantcontact", value: formData.applicantContact },
                 { key: "applicateemail", value: formData.applicantEmail },
                 { key: "englishproficiency", value: formData.englishProficiency },
-                { key: "businessunit", value: selectedBusinessItem },
+                { key: "businessUnit", value: selectedBusinessItemId.toString() },
                 { key: "progress", value: formData.progress },
                 { key: "stage", value: formData.stage },
                 { key: "applicateeducation", value: formData.highestEducation },
@@ -148,13 +160,13 @@ const handleSelectInterviewFinalItem = (itemName) => {
                 { key: "currentcity", value: formData.currentCity },
                 { key: "source", value: formData.source },
                 { key: "jobdescription", value: formData.description },
-                { key: "interviewtakenbyfr", value: selectedInterviewItem },
+                { key: "interviewtakenbyfr", value: selectedInterviewItemId.toString() },
                 { key: "firstroundoutcome", value: formData.firstOutcome },
                 { key: "commentsfr", value: formData.firstComments },
-                { key: "interviewtakenbym", value: selectedInterviewSecItem },
+                { key: "interviewtakenbym", value: selectedInterviewSecItemId.toString() },
                 { key: "machinetest", value: formData.machineTest },
                 { key: "commentsm", value: formData.secondComments },
-                { key: "interviewtakenbyf", value: selectedFinalInterviewItem },
+                { key: "interviewtakenbyf", value: selectedFinalInterviewItemId.toString() },
                 { key: "finalround", value: formData.finalOutcome },
                 { key: "commentsf", value: formData.finalComments },
               ]
@@ -258,6 +270,7 @@ const handleSelectInterviewFinalItem = (itemName) => {
                       <Form.Control type="text" name="businessUnit" value={selectedBusinessItem} readOnly
                         plaintext onChange={handleInputChange} className="form-control-grey-bg view-only-input"/>
                 </Col>
+                
                 <Col md={1}>
                 <button type="button" className="icon-button" onClick={handleSearchClick}>
                  <i className="fa fa-search"></i> {/* You can use an icon library like FontAwesome */}
@@ -281,7 +294,7 @@ const handleSelectInterviewFinalItem = (itemName) => {
                     { value: '4', label: 'Final Interview' },
                     { value: '5', label: 'HR Round' }
                   ]}
-                  name="progressform"
+                  name="progress"
                   onChange={handleSelectChange}
                   
                   
@@ -320,7 +333,7 @@ const handleSelectInterviewFinalItem = (itemName) => {
                     { value: '2', label: 'Inactive' },
                     { value: '3', label: 'On Hold' }
                   ]}
-                  name="stageform"
+                  name="stage"
                   onChange={handleSelectChange}
                   
                 />
@@ -376,7 +389,7 @@ const handleSelectInterviewFinalItem = (itemName) => {
                     { value: '2', label: 'Rejected' },
                     { value: '3', label: 'Did Not Happened' }
                   ]}
-                  name="firstoutcome"
+                  name="firstOutcome"
                   onChange={handleSelectChange}
                   
                 />
@@ -420,7 +433,7 @@ const handleSelectInterviewFinalItem = (itemName) => {
                     { value: '2', label: 'Rejected' },
                     { value: '3', label: 'Did Not Happened' }
                   ]}
-                  name="secondoutcome"
+                  name="machineTest"
                   onChange={handleSelectChange}
                   
                 />
@@ -464,7 +477,7 @@ const handleSelectInterviewFinalItem = (itemName) => {
                     { value: '2', label: 'Rejected' },
                     { value: '3', label: 'Did Not Happened' }
                   ]}
-                  name="thirdoutcome"
+                  name="finalOutcome"
                   onChange={handleSelectChange}
                  
                 />

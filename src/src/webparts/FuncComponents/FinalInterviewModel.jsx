@@ -61,7 +61,7 @@ function FinalInterviewModel({showFinalInterviewModal, handleCloseFinalInterview
     }, [showFinalInterviewModal, req_token, userID]);
 
     const handleFinalInterview = (item) => {
-        onSelectInterviewItemFinal(item.DisplayName); // Assuming 'Name' is the field to set in input
+        onSelectInterviewItemFinal(item.DisplayName, item.DT_RowId); // Assuming 'Name' is the field to set in input
          
     };
   return (

@@ -67,7 +67,7 @@ const BusinessUnitModel = ({showBuModal, handleCloseBu, onSelectBusinessItem})  
     }, [showBuModal, req_token, userID]);
 
     const handleRowClick = (item) => {
-      onSelectBusinessItem(item.Name); // Assuming 'Name' is the field to set in input
+      onSelectBusinessItem(item.Name, item.DT_RowId); // Assuming 'Name' is the field to set in input
        
   };
   return (

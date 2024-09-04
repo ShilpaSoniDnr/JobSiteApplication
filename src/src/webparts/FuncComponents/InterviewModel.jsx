@@ -61,7 +61,7 @@ function InterviewModel({showInterviewModal, handleCloseInterview, onSelectInter
         }
     }, [showInterviewModal, req_token, userID]);
     const handleInterviewClick = (item) => {
-        onSelectInterviewItem(item.DisplayName); // Assuming 'Name' is the field to set in input
+        onSelectInterviewItem(item.DisplayName, item.DT_RowId); // Assuming 'Name' is the field to set in input
          
     };
     
