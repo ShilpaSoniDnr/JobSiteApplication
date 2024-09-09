@@ -16,7 +16,7 @@ import InterviewModelSec from './InterviewModelSec';
 import FinalInterviewModel from './FinalInterviewModel';
 
 
-const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showInterviewModal, handleCloseInterview, showInterviewSecModal, handleCloseInterviewSec, showFinalInterviewModal, handleCloseFinalInterview}) => {
+const FormModel = ({ show, handleClose, isEditMode, selectedRowData, showBuModal, handleCloseBu, showInterviewModal, handleCloseInterview, showInterviewSecModal, handleCloseInterviewSec, showFinalInterviewModal, handleCloseFinalInterview}) => {
     const [showBuModal, setShowBuModal] = useState(false);
     const [showInterviewModal, setShowInterviewModal] = useState(false);
     const [showInterviewSecModal, setShowInterviewSecModal] = useState(false);
@@ -39,6 +39,7 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showIntervie
       applicantContact: '',
       applicantEmail: '',
       englishProficiency: '',
+      businessUnit: '',
       businessUnitId: '',
       progress: '',
       stage: '',
@@ -57,6 +58,86 @@ const FormModel = ({ show, handleClose, showBuModal, handleCloseBu, showIntervie
       finalOutcome: '',
       finalComments: '',
     });
+    
+
+    //For Edit Records
+
+    useEffect(() => {
+      if (isEditMode && selectedRowData) {
+          // Populate form fields with the fetched data for editing
+          setFormData({
+              postName: selectedRowData.name|| '',
+              applicantName: selectedRowData.applicantName || '',
+              applicantContact: selectedRowData.applicantContact || '',
+              applicantEmail: selectedRowData.applicantEmail || '',
+              englishProficiency: selectedRowData.englishProficiency || '',
+              businessUnit: selectedRowData.businessUnit || '',
+              progress: selectedRowData.progress || '',
+              stage: selectedRowData.stage || '',
+              highestEducation: selectedRowData.applicantEducation || '',
+              yearExp: selectedRowData.yearsOfExperience || '',
+              currentCity: selectedRowData.currentCity || '',
+              source: selectedRowData.source || '',
+              description: selectedRowData.jobDescription || '',
+              firstInterview: selectedRowData.firstInterview || '',
+              firstOutcome: selectedRowData.firstOutcome || '',
+              firstComments: selectedRowData.commentsFirstRound || '',
+              secondInterview: selectedRowData.secondInterview || '',
+              machineTest: selectedRowData.machineTest || '',
+              secondComments: selectedRowData.commentsMidRound || '',
+              finalInterview: selectedRowData.finalInterview || '',
+              finalOutcome: selectedRowData.finalOutcome || '',
+              finalComments: selectedRowData.commentsFinal || '',
+          });
+  
+          // Set related items based on fetched data
+          setSelectedBusinessItem(selectedRowData.businessUnitItem || '');
+          setSelectedBusinessItemId(selectedRowData.businessUnitId || null);
+          setSelectedInterviewItem(selectedRowData.firstInterviewName || '');
+          setSelectedInterviewItemId(selectedRowData.firstInterviewId || null);
+          setSelectedInterviewSecItem(selectedRowData.secondInterviewName || '');
+          setSelectedInterviewSecItemId(selectedRowData.secondInterviewId || null);
+          setSelectedFinalInterviewItem(selectedRowData.finalInterviewName || '');
+          setSelectedFinalInterviewItemId(selectedRowData.finalInterviewId || null);
+      } else {
+          // Initialize form fields for a new entry
+          setFormData({
+              postName: '',
+              applicantName: '',
+              applicantContact: '',
+              applicantEmail: '',
+              englishProficiency: '',
+              businessUnitId: '',
+              progress: '',
+              stage: '',
+              highestEducation: '',
+              yearExp: '',
+              currentCity: '',
+              source: '',
+              description: '',
+              firstInterview: '',
+              firstOutcome: '',
+              firstComments: '',
+              secondInterview: '',
+              machineTest: '',
+              secondComments: '',
+              finalInterview: '',
+              finalOutcome: '',
+              finalComments: '',
+          });
+  
+          // Clear related items for a new entry
+          setSelectedBusinessItem('');
+          setSelectedBusinessItemId(null);
+          setSelectedInterviewItem('');
+          setSelectedInterviewItemId(null);
+          setSelectedInterviewSecItem('');
+          setSelectedInterviewSecItemId(null);
+          setSelectedFinalInterviewItem('');
+          setSelectedFinalInterviewItemId(null);
+      }
+  }, [isEditMode, selectedRowData]);
+    
     //Business Model
     const handleSearchClick = () => {
       console.log("You have clicked on search");
@@ -258,7 +339,11 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
                   ]}
                   name="englishProficiency"
                   onChange={handleSelectChange}
-          
+                  value={
+                    formData.englishProficiency
+                      ? { value: formData.englishProficiency, label: formData.englishProficiency } 
+                      : null
+                  }
                 />
               </Form.Group>
             </Col>
@@ -296,6 +381,11 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
                   ]}
                   name="progress"
                   onChange={handleSelectChange}
+                  value={
+                    formData.progress
+                      ? { value: formData.progress, label: formData.progress } 
+                      : null
+                  }
                   
                   
                 />
@@ -335,6 +425,11 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
                   ]}
                   name="stage"
                   onChange={handleSelectChange}
+                  value={
+                    formData.stage 
+                      ? { value: formData.stage, label: formData.stage } 
+                      : null
+                  }
                   
                 />
               </Form.Group>
@@ -391,6 +486,11 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
                   ]}
                   name="firstOutcome"
                   onChange={handleSelectChange}
+                  value={
+                    formData.firstOutcome 
+                      ? { value: formData.firstOutcome, label: formData.firstOutcome } 
+                      : null
+                  }
                   
                 />
               </Form.Group>
@@ -435,6 +535,11 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
                   ]}
                   name="machineTest"
                   onChange={handleSelectChange}
+                  value={
+                    formData.machineTest 
+                      ? { value: formData.machineTest, label: formData.machineTest } 
+                      : null
+                  }
                   
                 />
               </Form.Group>
@@ -479,6 +584,11 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
                   ]}
                   name="finalOutcome"
                   onChange={handleSelectChange}
+                  value={
+                    formData.finalOutcome 
+                      ? { value: formData.finalOutcome, label: formData.finalOutcome } 
+                      : null
+                  }
                  
                 />
               </Form.Group>

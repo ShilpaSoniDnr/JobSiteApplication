@@ -1,3 +1,19 @@
+/*button designing*/
+button:disabled {
+  background-color: grey;
+  color: white;
+  border-color: grey;
+}
+
+button.btn-primary:enabled {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+button.btn-danger:enabled {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
 /*Custom Card*/
 .custom-card {
     background-color: #fef1f3; /* Light red background */

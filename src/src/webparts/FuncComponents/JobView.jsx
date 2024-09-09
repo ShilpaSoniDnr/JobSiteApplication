@@ -7,9 +7,21 @@ import './JobView.css';
 import { Button } from 'react-bootstrap'
 import FormModel from './FormModel';
 import { Encrypt } from './TokenEncryptor.mjs';
+import CircularJSON from 'circular-json';
 
 function JobView() {
   const [showFormModel, setShowFormModel] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null); // To track selected row
+  const [selectedRowData, setSelectedRowData] = useState(null);  // To hold selected row data
+  const [isEditMode, setIsEditMode] = useState(false);  // To track new/edit mode
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const accessToken = localStorage.getItem('accessToken');
+  const userID = localStorage.getItem('userID');
+  const username = localStorage.getItem('username');
+  const req_token = Encrypt(accessToken,username.toLowerCase())
+
   const handleOpenFormModel = () => {
     setShowFormModel(true); // Opens the primary modal
   };
@@ -17,13 +29,116 @@ function JobView() {
   const handleCloseFormModel = () => {
     setShowFormModel(false); // Closes the primary modal
   };
-  const [data, setData] = useState([{}]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const accessToken = localStorage.getItem('accessToken');
-  const userID = localStorage.getItem('userID');
-  const username = localStorage.getItem('username');
-  const req_token = Encrypt(accessToken,username.toLowerCase())
+
+  const handleRowSelect = (DT_RowId, index) => {
+    console.log('Row selected with ID:', DT_RowId);
+    setSelectedRow(index);
+    fetchJobData(DT_RowId);
+  };
+
+  // Disable buttons if no row is selected
+  const isButtonDisabled = selectedRow === null;
+  const fetchJobData = async (DT_RowId) => {
+    try {
+      const response = await fetch('http://localhost:3000/getEditRecordData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: CircularJSON.stringify({
+          Token: req_token,
+          UserID: parseInt(userID, 10),
+          db_Obj: {
+            ObjectName: "xsheet_JobApplicant",
+            Id: DT_RowId,
+            connectionString: null,
+            Pk_ColumnName: "Id",
+            Values: [
+              { key: "name", value: '' },
+              { key: "applicantname", value: '' },
+              { key: "applicantcontact", value: '' },
+              { key: "applicateemail", value: '' },
+              { key: "englishproficiency", value: '' },
+              { key: "businessUnit", value: '' },
+              { key: "progress", value: '' },
+              { key: "stage", value: '' },
+              { key: "applicateeducation", value: '' },
+              { key: "yearsofexperience", value: '' },
+              { key: "currentcity", value: '' },
+              { key: "source", value: '' },
+              { key: "jobdescription", value: '' },
+              { key: "interviewtakenbyfr", value: '' },
+              { key: "firstroundoutcome", value: '' },
+              { key: "commentsfr", value: '' },
+              { key: "interviewtakenbym", value: '' },
+              { key: "machinetest", value: '' },
+              { key: "commentsm", value: '' },
+              { key: "interviewtakenbyf", value: '' },
+              { key: "finalround", value: '' },
+              { key: "commentsf", value: '' },
+            ]
+          },
+        }),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Fetched record details:', result);
+  
+        // Extract and structure the data
+        if (result && result.Result && result.Result.Table.length > 0) {
+          const rowData = result.Result.Table[0];  // Extract the first item from Table array
+          const structuredData = {
+            applicantContact: rowData.applicantcontact,
+            applicantName: rowData.applicantname,
+            applicantEducation: rowData.applicateeducation,
+            applicantEmail: rowData.applicateemail,
+            businessUnit: rowData.businessunit,
+            commentsFinal: rowData.commentsf,
+            commentsFirstRound: rowData.commentsfr,
+            commentsMidRound: rowData.commentsm,
+            currentCity: rowData.currentcity,
+            englishProficiency: rowData.englishproficiency,
+            finalOutcome: rowData.finalround,
+            firstOutcome: rowData.firstroundoutcome,
+            interviewTakenByFinal: rowData.interviewtakenbyf,
+            interviewTakenByFirstRound: rowData.interviewtakenbyfr,
+            interviewTakenByMidRound: rowData.interviewtakenbym,
+            jobDescription: rowData.jobdescription,
+            machineTest: rowData.machinetest,
+            name: rowData.name,
+            progress: rowData.progress,
+            source: rowData.source,
+            stage: rowData.stage,
+            yearsOfExperience: rowData.yearsofexperience,
+          };
+  
+          setSelectedRowData(structuredData);
+        } else {
+          console.error('Unexpected response format:', result);
+        }
+      } else {
+        console.error('Failed to fetch record details');
+      }
+    } catch (error) {
+      console.error('Error fetching record details:', error);
+    }
+  };
+  console.log(selectedRowData);
+  
+  const handleEditClick = async (DT_RowId) => {
+    await fetchJobData(DT_RowId);  // Call the fetch function to get the job data
+    setShowFormModel(true); // Open the form modal after fetching data
+    setIsEditMode(true); 
+  };
+
+ 
+  const handleNewEntryClick = () => {
+    setSelectedRowData(null);  // Clear previous data
+    setIsEditMode(false);  // Set edit mode to false (new entry)
+    setShowFormModel(true);  // Open the modal
+};
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,8 +205,8 @@ function JobView() {
         </div>
         <div className="custom-btn d-flex align-items-center justify-content-center">
           <button className="btn btn-success btn-sm mx-1"><i className="fas fa-plus" onClick={handleOpenFormModel}></i> New</button>
-          <button className="btn btn-primary btn-sm mx-1"><i className="fas fa-edit" onClick={handleOpenFormModel}></i> Edit</button>
-          <button className="btn btn-danger btn-sm mx-1"><i className="fas fa-trash"></i> Trash</button>
+          <button className={`btn btn-sm mx-1 ${isButtonDisabled ? 'btn-secondary' : 'btn-primary'}`} onClick={handleEditClick} disabled={isButtonDisabled}><i className="fas fa-edit"></i> Edit</button>
+          <button className={`btn btn-sm mx-1 ${isButtonDisabled ? 'btn-secondary' : 'btn-danger'}`} disabled={isButtonDisabled}><i className="fas fa-trash" disabled={selectedRow === null}></i> Trash</button>
         </div>
       </div>
     </div>
@@ -112,7 +227,7 @@ function JobView() {
         <tbody>
         {data.length > 0 ? (
               data.map((item, index) => (
-                <tr key={index}>
+                <tr key={item.DT_RowId} onClick={() => handleRowSelect(item.DT_RowId, index)} className={selectedRow === index ? 'table-active' : ''}>
                   <td>{item.ApplicantName}</td>
                   <td>{item.ApplicateEmail}</td>
                   <td>{item.ApplicantContact}</td>
@@ -127,62 +242,10 @@ function JobView() {
               <tr>
                 <td colSpan="8">No data available</td>
               </tr>
-            )}
-            {/*<tr>
-                <td>Test</td>
-                <td>Test@gmail.com</td>
-                <td>8976542457</td>
-                <td>Data</td>
-                <td>Collection</td>
-                <td>In Progress</td>
-                <td>Collaboration</td>
-                <td>12 Aug 2024</td>
-            </tr>
-            <tr>
-                <td>Test</td>
-                <td>Test@gmail.com</td>
-                <td>8976542457</td>
-                <td>Data</td>
-                <td>Collection</td>
-                <td>In Progress</td>
-                <td>Collaboration</td>
-                <td>12 Aug 2024</td>
-            </tr>
-            <tr>
-                <td>Test</td>
-                <td>Test@gmail.com</td>
-                <td>8976542457</td>
-                <td>Data</td>
-                <td>Collection</td>
-                <td>In Progress</td>
-                <td>Collaboration</td>
-                <td>12 Aug 2024</td>
-            </tr>
-            <tr>
-                <td>Test</td>
-                <td>Test@gmail.com</td>
-                <td>8976542457</td>
-                <td>Data</td>
-                <td>Collection</td>
-                <td>In Progress</td>
-                <td>Collaboration</td>
-                <td>12 Aug 2024</td>
-            </tr>
-            <tr>
-                <td>Test</td>
-                <td>Test@gmail.com</td>
-                <td>8976542457</td>
-                <td>Data</td>
-                <td>Collection</td>
-                <td>In Progress</td>
-                <td>Collaboration</td>
-                <td>12 Aug 2024</td>
-            </tr>*/}
-
-          
+            )} 
         </tbody>
       </table>
-      <FormModel show={showFormModel} handleClose={handleCloseFormModel} />
+      <FormModel show={showFormModel} handleClose={handleCloseFormModel} selectedRowData={selectedRowData} isEditMode={isEditMode}/>
     </div>
     </>
 
