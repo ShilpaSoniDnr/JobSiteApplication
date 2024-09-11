@@ -16,7 +16,7 @@ import InterviewModelSec from './InterviewModelSec';
 import FinalInterviewModel from './FinalInterviewModel';
 
 
-const FormModel = ({ show, handleClose, isEditMode, selectedRowData, showBuModal, handleCloseBu, showInterviewModal, handleCloseInterview, showInterviewSecModal, handleCloseInterviewSec, showFinalInterviewModal, handleCloseFinalInterview}) => {
+const FormModel = ({ show, handleClose, isEditMode, selectedRowData,Job_RowId, showBuModal, handleCloseBu, showInterviewModal, handleCloseInterview, showInterviewSecModal, handleCloseInterviewSec, showFinalInterviewModal, handleCloseFinalInterview}) => {
     const [showBuModal, setShowBuModal] = useState(false);
     const [showInterviewModal, setShowInterviewModal] = useState(false);
     const [showInterviewSecModal, setShowInterviewSecModal] = useState(false);
@@ -38,27 +38,72 @@ const FormModel = ({ show, handleClose, isEditMode, selectedRowData, showBuModal
       applicantName: '',
       applicantContact: '',
       applicantEmail: '',
-      englishProficiency: '',
+      englishProficiency: null,
       businessUnit: '',
       businessUnitId: '',
-      progress: '',
-      stage: '',
+      progress: null,
+      stage: null,
       highestEducation: '',
       yearExp: '',
       currentCity: '',
       source: '',
       description: '',
       firstInterview: '',
-      firstOutcome: '',
+      firstOutcome: null,
       firstComments: '',
       secondInterview: '',
-      machineTest: '',
+      machineTest: null,
       secondComments: '',
       finalInterview: '',
-      finalOutcome: '',
+      finalOutcome: null,
       finalComments: '',
     });
-    
+    //For Dropdown Fields
+    //For Progress
+    const optionsProgress = [
+      { value: '1', label: 'Screening' },
+      { value: '2', label: 'First Interview' },
+      { value: '3', label: 'Machine Test' },
+      { value: '4', label: 'Final Interview' },
+      { value: '5', label: 'HR Round' },
+    ];
+    //For English Proficiency
+    const optionsEnglishProficiency = [
+      { value: '1', label: '1' },
+      { value: '2', label: '2' },
+      { value: '3', label: '3' },
+      { value: '4', label: '4' },
+      { value: '5', label: '5' },
+      { value: '6', label: '6' },
+      { value: '7', label: '7' },
+      { value: '8', label: '8' },
+      { value: '9', label: '9' },
+      { value: '10', label: '10' }
+    ]
+    //For Stage
+    const optionsStage = [
+      { value: '1', label: 'Active' },
+      { value: '2', label: 'Inactive' },
+      { value: '3', label: 'On Hold' }
+    ]
+    //First Outcome
+    const optionsFirstOutcome = [
+      { value: '1', label: 'Selected' },
+      { value: '2', label: 'Rejected' },
+      { value: '3', label: 'Did Not Happened' }
+    ]
+    //Second Outcome
+    const optionsSecondOutcome = [
+      { value: '1', label: 'Selected' },
+      { value: '2', label: 'Rejected' },
+      { value: '3', label: 'Did Not Happened' }
+    ]
+    //Final Outcome
+    const optionsFinalOutcome = [
+      { value: '1', label: 'Selected' },
+      { value: '2', label: 'Rejected' },
+      { value: '3', label: 'Did Not Happened' }
+    ]
 
     //For Edit Records
 
@@ -71,7 +116,7 @@ const FormModel = ({ show, handleClose, isEditMode, selectedRowData, showBuModal
               applicantContact: selectedRowData.applicantContact || '',
               applicantEmail: selectedRowData.applicantEmail || '',
               englishProficiency: selectedRowData.englishProficiency || '',
-              businessUnit: selectedRowData.businessUnit || '',
+              businessUnit: selectedRowData.businessUnit.Name || '',
               progress: selectedRowData.progress || '',
               stage: selectedRowData.stage || '',
               highestEducation: selectedRowData.applicantEducation || '',
@@ -79,26 +124,26 @@ const FormModel = ({ show, handleClose, isEditMode, selectedRowData, showBuModal
               currentCity: selectedRowData.currentCity || '',
               source: selectedRowData.source || '',
               description: selectedRowData.jobDescription || '',
-              firstInterview: selectedRowData.firstInterview || '',
+              firstInterview: selectedRowData.interviewTakenByFirstRound.Name || '',
               firstOutcome: selectedRowData.firstOutcome || '',
               firstComments: selectedRowData.commentsFirstRound || '',
-              secondInterview: selectedRowData.secondInterview || '',
+              secondInterview: selectedRowData.interviewTakenByMidRound.Name || '',
               machineTest: selectedRowData.machineTest || '',
               secondComments: selectedRowData.commentsMidRound || '',
-              finalInterview: selectedRowData.finalInterview || '',
+              finalInterview: selectedRowData.interviewTakenByFinal.Name || '',
               finalOutcome: selectedRowData.finalOutcome || '',
               finalComments: selectedRowData.commentsFinal || '',
           });
   
           // Set related items based on fetched data
-          setSelectedBusinessItem(selectedRowData.businessUnitItem || '');
-          setSelectedBusinessItemId(selectedRowData.businessUnitId || null);
-          setSelectedInterviewItem(selectedRowData.firstInterviewName || '');
-          setSelectedInterviewItemId(selectedRowData.firstInterviewId || null);
-          setSelectedInterviewSecItem(selectedRowData.secondInterviewName || '');
-          setSelectedInterviewSecItemId(selectedRowData.secondInterviewId || null);
-          setSelectedFinalInterviewItem(selectedRowData.finalInterviewName || '');
-          setSelectedFinalInterviewItemId(selectedRowData.finalInterviewId || null);
+          setSelectedBusinessItem(selectedRowData.businessUnit.Name || '');
+          setSelectedBusinessItemId(selectedRowData.businessUnit.Id || null);
+          setSelectedInterviewItem(selectedRowData.interviewTakenByFirstRound.Name || '');
+          setSelectedInterviewItemId(selectedRowData.interviewTakenByFirstRound.Id || null);
+          setSelectedInterviewSecItem(selectedRowData.interviewTakenByMidRound.Name || '');
+          setSelectedInterviewSecItemId(selectedRowData.interviewTakenByMidRound.Id || null);
+          setSelectedFinalInterviewItem(selectedRowData.interviewTakenByFinal.Name || '');
+          setSelectedFinalInterviewItemId(selectedRowData.interviewTakenByFinal.Id || null);
       } else {
           // Initialize form fields for a new entry
           setFormData({
@@ -106,23 +151,23 @@ const FormModel = ({ show, handleClose, isEditMode, selectedRowData, showBuModal
               applicantName: '',
               applicantContact: '',
               applicantEmail: '',
-              englishProficiency: '',
+              englishProficiency: null,
               businessUnitId: '',
-              progress: '',
-              stage: '',
+              progress: null,
+              stage: null,
               highestEducation: '',
               yearExp: '',
               currentCity: '',
               source: '',
               description: '',
               firstInterview: '',
-              firstOutcome: '',
+              firstOutcome: null,
               firstComments: '',
               secondInterview: '',
-              machineTest: '',
+              machineTest: null,
               secondComments: '',
               finalInterview: '',
-              finalOutcome: '',
+              finalOutcome: null,
               finalComments: '',
           });
   
@@ -211,68 +256,79 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
   const handleSelectChange = (selectedOption, { name }) => {
     setFormData((prevData) => ({
       ...prevData,
-      [name]: selectedOption ? selectedOption.value : '',
+      [name]: selectedOption ? selectedOption.value : null,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
 
-      const newItem = {
-          Token: req_token,
-          UserID: parseInt(userID, 10),
-          db_Obj: {
-              ID: -1,
-              connectionString: null,
-              Pk_ColumnName: "Id",
-              ObjectName: "xsheet_JobApplicant",
-              Values: [
-                { key: "name", value: formData.postName },
-                { key: "applicantname", value: formData.applicantName },
-                { key: "applicantcontact", value: formData.applicantContact },
-                { key: "applicateemail", value: formData.applicantEmail },
-                { key: "englishproficiency", value: formData.englishProficiency },
-                { key: "businessUnit", value: selectedBusinessItemId.toString() },
-                { key: "progress", value: formData.progress },
-                { key: "stage", value: formData.stage },
-                { key: "applicateeducation", value: formData.highestEducation },
-                { key: "yearsofexperience", value: formData.yearExp },
-                { key: "currentcity", value: formData.currentCity },
-                { key: "source", value: formData.source },
-                { key: "jobdescription", value: formData.description },
-                { key: "interviewtakenbyfr", value: selectedInterviewItemId.toString() },
-                { key: "firstroundoutcome", value: formData.firstOutcome },
-                { key: "commentsfr", value: formData.firstComments },
-                { key: "interviewtakenbym", value: selectedInterviewSecItemId.toString() },
-                { key: "machinetest", value: formData.machineTest },
-                { key: "commentsm", value: formData.secondComments },
-                { key: "interviewtakenbyf", value: selectedFinalInterviewItemId.toString() },
-                { key: "finalround", value: formData.finalOutcome },
-                { key: "commentsf", value: formData.finalComments },
-              ]
-          }
-      };
+    // Determine if it's an edit or a new entry based on the presence of DT_RowId
+    const isEditMode = Job_RowId ? true : false;
 
-      try {
+    const newItem = {
+        Token: req_token,
+        UserID: parseInt(userID, 10),
+        db_Obj: {
+            ID: isEditMode ? Job_RowId : -1,  // Use DT_RowId if editing, otherwise -1 for new record
+            connectionString: null,
+            Pk_ColumnName: "Id",
+            ObjectName: "xsheet_JobApplicant",
+            Values: [
+              { key: "name", value: formData.postName },
+              { key: "applicantname", value: formData.applicantName },
+              { key: "applicantcontact", value: formData.applicantContact },
+              { key: "applicateemail", value: formData.applicantEmail },
+              { key: "englishproficiency", value: formData.englishProficiency },
+              { key: "businessUnit", value: selectedBusinessItemId.toString() },
+              { key: "progress", value: formData.progress },
+              { key: "stage", value: formData.stage },
+              { key: "applicateeducation", value: formData.highestEducation },
+              { key: "yearsofexperience", value: formData.yearExp },
+              { key: "currentcity", value: formData.currentCity },
+              { key: "source", value: formData.source },
+              { key: "jobdescription", value: formData.description },
+              { key: "interviewtakenbyfr", value: selectedInterviewItemId.toString() },
+              { key: "firstroundoutcome", value: formData.firstOutcome },
+              { key: "commentsfr", value: formData.firstComments },
+              { key: "interviewtakenbym", value: selectedInterviewSecItemId.toString() },
+              { key: "machinetest", value: formData.machineTest },
+              { key: "commentsm", value: formData.secondComments },
+              { key: "interviewtakenbyf", value: selectedFinalInterviewItemId.toString() },
+              { key: "finalround", value: formData.finalOutcome },
+              { key: "commentsf", value: formData.finalComments },
+            ]
+        }
+    };
+
+    try {
+        // Submit data to the same API
         const response = await fetch('http://localhost:3000/saveUpdateRecord', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newItem),
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newItem),
         });
-  
+
         const result = await response.json();
         console.log(result);
-        console.log('Item created successfully:', result);
+
+        // Show a success message based on the operation type
+        if (isEditMode) {
+            alert('Record updated successfully!');
+        } else {
+            alert('Record created successfully!');
+        }
+
         console.log('Form submitted data:', newItem);
-      } catch (error) {
-        console.error('Error creating item:', error);
-      }
-  
-      handleClose(); // Close the modal after submission
-    };
+    } catch (error) {
+        console.error('Error submitting item:', error);
+        alert('Error while submitting the record. Please try again.');
+    }
+
+    handleClose(); // Close the modal after submission
+};
      //Fetch Business Unit data
      
 
@@ -324,26 +380,12 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
             <Form.Group controlId="formEnglishProficiency">
                 <Form.Label>English Proficiency</Form.Label>
                 <Select 
+                  key={isEditMode ? selectedRowData?.englishProficiency : 'new'}
                   placeholder="Select"
-                  options={[
-                    { value: '1', label: '1' },
-                    { value: '2', label: '2' },
-                    { value: '3', label: '3' },
-                    { value: '4', label: '4' },
-                    { value: '5', label: '5' },
-                    { value: '6', label: '6' },
-                    { value: '7', label: '7' },
-                    { value: '8', label: '8' },
-                    { value: '9', label: '9' },
-                    { value: '10', label: '10' }
-                  ]}
+                  options={optionsEnglishProficiency}
                   name="englishProficiency"
-                  onChange={handleSelectChange}
-                  value={
-                    formData.englishProficiency
-                      ? { value: formData.englishProficiency, label: formData.englishProficiency } 
-                      : null
-                  }
+                  onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'englishProficiency' })}
+                  value={optionsEnglishProficiency.find(option => option.value === formData.englishProficiency) || null}
                 />
               </Form.Group>
             </Col>
@@ -370,25 +412,14 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
             <Col md={6}>
               <Form.Group controlId="formProgress">
                 <Form.Label>Progress </Form.Label>
-                <Select 
-                  placeholder="Select"
-                  options={[
-                    { value: '1', label: 'Screening' },
-                    { value: '2', label: 'First Interview' },
-                    { value: '3', label: 'Machine Test' },
-                    { value: '4', label: 'Final Interview' },
-                    { value: '5', label: 'HR Round' }
-                  ]}
-                  name="progress"
-                  onChange={handleSelectChange}
-                  value={
-                    formData.progress
-                      ? { value: formData.progress, label: formData.progress } 
-                      : null
-                  }
-                  
-                  
-                />
+                  <Select
+                    key={isEditMode ? selectedRowData?.progress : 'new'}
+                    name="progress"
+                    options={optionsProgress}
+                    placeholder="Select"
+                    onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'progress' })}
+                    value={optionsProgress.find(option => option.value === formData.progress) || null}
+                  />
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -417,19 +448,12 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
               <Form.Group controlId="formStage">
                 <Form.Label>Stage </Form.Label>
                 <Select 
+                  key={isEditMode ? selectedRowData?.stage : 'new'}
                   placeholder="Select"
-                  options={[
-                    { value: '1', label: 'Active' },
-                    { value: '2', label: 'Inactive' },
-                    { value: '3', label: 'On Hold' }
-                  ]}
+                  options={optionsStage}
                   name="stage"
-                  onChange={handleSelectChange}
-                  value={
-                    formData.stage 
-                      ? { value: formData.stage, label: formData.stage } 
-                      : null
-                  }
+                  onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'stage' })}
+                  value={optionsStage.find(option => option.value === formData.stage) || null}
                   
                 />
               </Form.Group>
@@ -477,20 +501,13 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
             <Col md={6}>
               <Form.Group controlId="formFirstOutcome">
                 <Form.Label>First Round Outcome </Form.Label>
-                <Select 
+                <Select
+                  key={isEditMode ? selectedRowData?.firstOutcome : 'new'} 
                   placeholder="Select"
-                  options={[
-                    { value: '1', label: 'Selected' },
-                    { value: '2', label: 'Rejected' },
-                    { value: '3', label: 'Did Not Happened' }
-                  ]}
+                  options={optionsFirstOutcome}
                   name="firstOutcome"
-                  onChange={handleSelectChange}
-                  value={
-                    formData.firstOutcome 
-                      ? { value: formData.firstOutcome, label: formData.firstOutcome } 
-                      : null
-                  }
+                  onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'firstOutcome' })}
+                  value={optionsFirstOutcome.find(option => option.value === formData.firstOutcome) || null}
                   
                 />
               </Form.Group>
@@ -527,19 +544,12 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
               <Form.Group controlId="formMachineTest">
                 <Form.Label>Machine Test </Form.Label>
                 <Select 
+                  key={isEditMode ? selectedRowData?.machineTest : 'new'}
                   placeholder="Select"
-                  options={[
-                    { value: '1', label: 'Selected' },
-                    { value: '2', label: 'Rejected' },
-                    { value: '3', label: 'Did Not Happened' }
-                  ]}
+                  options={optionsSecondOutcome}
                   name="machineTest"
-                  onChange={handleSelectChange}
-                  value={
-                    formData.machineTest 
-                      ? { value: formData.machineTest, label: formData.machineTest } 
-                      : null
-                  }
+                  onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'machineTest' })}
+                  value={optionsSecondOutcome.find(option => option.value === formData.machineTest) || null}
                   
                 />
               </Form.Group>
@@ -576,19 +586,12 @@ const handleSelectInterviewFinalItem = (DisplayName, DT_RowId) => {
               <Form.Group controlId="formFinalOutcome">
                 <Form.Label>Final Round  </Form.Label>
                 <Select 
+                  key={isEditMode ? selectedRowData?.finalOutcome : 'new'}
                   placeholder="Select"
-                  options={[
-                    { value: '1', label: 'Selected' },
-                    { value: '2', label: 'Rejected' },
-                    { value: '3', label: 'Did Not Happened' }
-                  ]}
+                  options={optionsFinalOutcome}
                   name="finalOutcome"
-                  onChange={handleSelectChange}
-                  value={
-                    formData.finalOutcome 
-                      ? { value: formData.finalOutcome, label: formData.finalOutcome } 
-                      : null
-                  }
+                  onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'finalOutcome' })}
+                  value={optionsFinalOutcome.find(option => option.value === formData.finalOutcome) || null}
                  
                 />
               </Form.Group>

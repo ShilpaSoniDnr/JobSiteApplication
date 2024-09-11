@@ -13,6 +13,7 @@ function JobView() {
   const [showFormModel, setShowFormModel] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null); // To track selected row
   const [selectedRowData, setSelectedRowData] = useState(null);  // To hold selected row data
+  const [Job_RowId, setDT_RowId] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);  // To track new/edit mode
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,6 +25,8 @@ function JobView() {
 
   const handleOpenFormModel = () => {
     setShowFormModel(true); // Opens the primary modal
+    setSelectedRowData(null);  // Clear previous data
+    setIsEditMode(false);
   };
 
   const handleCloseFormModel = () => {
@@ -98,22 +101,23 @@ function JobView() {
             commentsFirstRound: rowData.commentsfr,
             commentsMidRound: rowData.commentsm,
             currentCity: rowData.currentcity,
-            englishProficiency: rowData.englishproficiency,
-            finalOutcome: rowData.finalround,
-            firstOutcome: rowData.firstroundoutcome,
+            englishProficiency: String(rowData.englishproficiency),
+            finalOutcome: String(rowData.finalround),
+            firstOutcome: String(rowData.firstroundoutcome),
             interviewTakenByFinal: rowData.interviewtakenbyf,
             interviewTakenByFirstRound: rowData.interviewtakenbyfr,
             interviewTakenByMidRound: rowData.interviewtakenbym,
             jobDescription: rowData.jobdescription,
-            machineTest: rowData.machinetest,
+            machineTest: String(rowData.machinetest),
             name: rowData.name,
-            progress: rowData.progress,
+            progress: String(rowData.progress),
             source: rowData.source,
-            stage: rowData.stage,
+            stage: String(rowData.stage),
             yearsOfExperience: rowData.yearsofexperience,
           };
   
           setSelectedRowData(structuredData);
+          setDT_RowId(DT_RowId);
         } else {
           console.error('Unexpected response format:', result);
         }
@@ -125,6 +129,7 @@ function JobView() {
     }
   };
   console.log(selectedRowData);
+  console.log(Job_RowId);
   
   const handleEditClick = async (DT_RowId) => {
     await fetchJobData(DT_RowId);  // Call the fetch function to get the job data
@@ -133,11 +138,11 @@ function JobView() {
   };
 
  
-  const handleNewEntryClick = () => {
+ /* const handleNewEntryClick = () => {
     setSelectedRowData(null);  // Clear previous data
     setIsEditMode(false);  // Set edit mode to false (new entry)
     setShowFormModel(true);  // Open the modal
-};
+};*/
   
 
   useEffect(() => {
@@ -204,7 +209,7 @@ function JobView() {
           </div>
         </div>
         <div className="custom-btn d-flex align-items-center justify-content-center">
-          <button className="btn btn-success btn-sm mx-1"><i className="fas fa-plus" onClick={handleOpenFormModel}></i> New</button>
+          <button className="btn btn-success btn-sm mx-1" onClick={handleOpenFormModel}><i className="fas fa-plus"></i> New</button>
           <button className={`btn btn-sm mx-1 ${isButtonDisabled ? 'btn-secondary' : 'btn-primary'}`} onClick={handleEditClick} disabled={isButtonDisabled}><i className="fas fa-edit"></i> Edit</button>
           <button className={`btn btn-sm mx-1 ${isButtonDisabled ? 'btn-secondary' : 'btn-danger'}`} disabled={isButtonDisabled}><i className="fas fa-trash" disabled={selectedRow === null}></i> Trash</button>
         </div>
@@ -245,7 +250,7 @@ function JobView() {
             )} 
         </tbody>
       </table>
-      <FormModel show={showFormModel} handleClose={handleCloseFormModel} selectedRowData={selectedRowData} isEditMode={isEditMode}/>
+      <FormModel show={showFormModel} handleClose={handleCloseFormModel} selectedRowData={selectedRowData} Job_RowId={Job_RowId} isEditMode={isEditMode}/>
     </div>
     </>
 
