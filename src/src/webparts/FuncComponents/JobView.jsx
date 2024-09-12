@@ -6,13 +6,14 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './JobView.css';
 import { Button } from 'react-bootstrap'
 import FormModel from './FormModel';
-import { Encrypt } from './TokenEncryptor.mjs';
+import { Encrypt } from './TokenEncryptor.mjs';//user Id and Password token algorithm
 import CircularJSON from 'circular-json';
 
 function JobView() {
   const [showFormModel, setShowFormModel] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null); // To track selected row
-  const [selectedRowData, setSelectedRowData] = useState(null);  // To hold selected row data
+  const [selectedRowData, setSelectedRowData] = useState(null); 
+  const [deleteId, setdeleteId]  = useState(null);// To hold selected row data
   const [Job_RowId, setDT_RowId] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);  // To track new/edit mode
   const [data, setData] = useState([]);
@@ -37,10 +38,13 @@ function JobView() {
     console.log('Row selected with ID:', DT_RowId);
     setSelectedRow(index);
     fetchJobData(DT_RowId);
+    setdeleteId(DT_RowId);
   };
 
   // Disable buttons if no row is selected
   const isButtonDisabled = selectedRow === null;
+ 
+
   const fetchJobData = async (DT_RowId) => {
     try {
       const response = await fetch('http://localhost:3000/getEditRecordData', {
@@ -138,11 +142,51 @@ function JobView() {
   };
 
  
- /* const handleNewEntryClick = () => {
-    setSelectedRowData(null);  // Clear previous data
-    setIsEditMode(false);  // Set edit mode to false (new entry)
-    setShowFormModel(true);  // Open the modal
-};*/
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    
+    // Ensure deleteId is available
+    if (!deleteId) {
+      alert('No record selected for deletion.');
+      return;
+    }
+  
+    const deleteItem = {
+      Token: req_token,
+      UserID: parseInt(userID, 10),
+      db_Obj: {
+        ID: deleteId,  // Use the deleteId stored in state
+        connectionString: null,
+        Pk_ColumnName: "Id",
+        ObjectName: "xsheet_JobApplicant",
+        Values: [
+          { key: "isdeleted", value: "Y" },
+        ]
+      }
+    };
+  
+    try {
+      // Submit data to the same API
+      const response = await fetch('http://localhost:3000/saveUpdateRecord', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(deleteItem),
+      });
+  
+      const result = await response.json();
+      console.log(result);
+  
+      // Show a success message based on the operation type
+      alert(`Record Deleted Successfully. ID: ${deleteId}`);
+  
+      console.log('Form Deleted data:', deleteItem);
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      alert('Error while deleting the record. Please try again.');
+    }
+  };
   
 
   useEffect(() => {
@@ -211,7 +255,7 @@ function JobView() {
         <div className="custom-btn d-flex align-items-center justify-content-center">
           <button className="btn btn-success btn-sm mx-1" onClick={handleOpenFormModel}><i className="fas fa-plus"></i> New</button>
           <button className={`btn btn-sm mx-1 ${isButtonDisabled ? 'btn-secondary' : 'btn-primary'}`} onClick={handleEditClick} disabled={isButtonDisabled}><i className="fas fa-edit"></i> Edit</button>
-          <button className={`btn btn-sm mx-1 ${isButtonDisabled ? 'btn-secondary' : 'btn-danger'}`} disabled={isButtonDisabled}><i className="fas fa-trash" disabled={selectedRow === null}></i> Trash</button>
+          <button className={`btn btn-sm mx-1 ${isButtonDisabled ? 'btn-secondary' : 'btn-danger'}`} onClick={handleDelete} disabled={isButtonDisabled}><i className="fas fa-trash" disabled={selectedRow === null}></i> Trash</button>
         </div>
       </div>
     </div>

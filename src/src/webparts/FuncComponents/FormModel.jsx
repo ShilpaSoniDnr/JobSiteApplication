@@ -4,7 +4,7 @@ import Select from 'react-select';
 import './JobView.css';
 import ScreeningTab from './ScreeningTab';
 import { useState, useEffect } from 'react'
-import { Encrypt } from './TokenEncryptor.mjs';
+import { Encrypt } from './TokenEncryptor.mjs'; //user Id and Password token algorithm
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';

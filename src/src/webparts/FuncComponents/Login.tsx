@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import './login.css';
-import { encode } from './TokenEncryptor.mjs';
+import { encode } from './TokenEncryptor.mjs';//user Id and Password token algorithm
 import { useNavigate } from 'react-router-dom';
 
 
